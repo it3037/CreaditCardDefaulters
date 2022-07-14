@@ -20,17 +20,16 @@ Features:
 8.	PAY_AMT1 to PAY_AMT6: Amount of previous payments. 
 
 
-Target Label:
+### Target Label:
 Whether a person shall default in the credit card payment or not.
 9.	default payment next month:  Yes = 1, No = 0.
 
 Apart from training files, we also require a "schema" file from the client, which contains all the relevant information about the training files such as:
 Name of the files, Length of Date value in FileName, Length of Time value in FileName, Number of Columns, Name of the Columns, and their datatype.
 
-Data Validation 
+### Data Validation 
 In this step, we perform different sets of validation on the given set of training files.  
 1.	 Name Validation- We validate the name of the files based on the given name in the schema file. We have created a regex pattern as per the name given in the schema file to use for validation. After validating the pattern in the name, we check for the length of date in the file name as well as the length of time in the file name. If all the values are as per requirement, we move such files to "Good_Data_Folder" else we move such files to "Bad_Data_Folder."
-
 2.	 Number of Columns - We validate the number of columns present in the files, and if it doesn't match with the value given in the schema file, then the file is moved to "Bad_Data_Folder."
 
 
@@ -40,13 +39,14 @@ In this step, we perform different sets of validation on the given set of traini
 
 
 5.	Null values in columns - If any of the columns in a file have all the values as NULL or missing, we discard such a file and move it to "Bad_Data_Folder".
-Data Insertion in Database
+
+### Data Insertion in Database
  
 1) Database Creation and connection - Create a database with the given name passed. If the database has already been created, open a connection to the database. 
 2) Table creation in the database - Table with name - "Good_Data", is created in the database for inserting the files in the "Good_Data_Folder" based on given column names and datatype in the schema file. If the table is already present, then the new table is not created, and new files are inserted in the already present table as we want training to be done on new as well as old training files.     
 3) Insertion of files in the table - All the files in the "Good_Data_Folder" are inserted in the above-created table. If any file has invalid data type in any of the columns, the file is not loaded in the table and is moved to "Bad_Data_Folder".
 
-Model Training 
+### Model Training 
 1) Data Export from Db - The data in a stored database is exported as a CSV file to be used for model training.
 2) Data Preprocessing   
 a)	Check for null values in the columns. If present, impute the null values using the categorical imputer.
@@ -59,11 +59,11 @@ The Kmeans model is trained over preprocessed data, and the model is saved for f
 
 
 
-Prediction Data Description
+### Prediction Data Description
  The Client will send the data in multiple sets of files in batches at a given location. Data will contain the credit and payment record of customers. 
 Apart from prediction files, we also require a "schema" file from the client, which contains all the relevant information about the training files such as:
 Name of the files, Length of Date value in FileName, Length of Time value in FileName, Number of Columns, Name of the Columns and their datatype.
-Data Validation  
+### Data Validation  
 In this step, we perform different sets of validation on the given set of training files.  
 1) Name Validation- We validate the name of the files based on given Name in the schema file. We have created a regex pattern as per the name given in the schema file, to use for validation. After validating the pattern in the name, we check for the length of date in the file name as well as the length of the timestamp in the file name. If all the values are as per requirement, we move such files to "Good_Data_Folder" else we move such files to "Bad_Data_Folder". 
 2) Number of Columns - We validate the number of columns present in the files, and if it doesn't match with the value given in the schema file, then the file is moved to "Bad_Data_Folder". 
@@ -83,3 +83,33 @@ c)	Check for  correlation.
 3) Clustering - KMeans model created during training is loaded, and clusters for the preprocessed prediction data is predicted.
 4) Prediction - Based on the cluster number, the respective model is loaded and is used to predict the data for that cluster.
 5) Once the prediction is made for all the clusters, the predictions along with the Wafer names are saved in a CSV file at a given location, and the location is returned to the client.
+
+###############################################################################
+
+## How to start project
+
+Create Environment
+```bash
+conda create -n CreaditCardDefaulters python=3.7 -y 
+```
+
+Activate Environment
+```bash
+conda activate CreaditCardDefaulters
+```
+
+After that we should be install all requirement library for this project
+
+```bash
+pip install -r requirements.txt
+```
+
+Then run 
+```bash
+python main.py
+```
+
+Then paste this url in browser 
+```bash
+http://127.0.0.1:5001/
+```
